@@ -5,14 +5,18 @@ import os
 
 def open_file(filename):
 
-    if not filename.endswith('.txt'):
+    if not os.path.exists(filename):
         return -1
 
-    if os.path.exists(filename):
+    if not filename.endswith('.txt'):
+        return -2
+
+    if os.stat(filename).st_size == 0:
+        return -3
+
+    else:
         with open(filename, "r", encoding="utf-8") as file:
             return file.read()
-    else:
-        return -2
 
 
 def count_paragraphs(filename):
@@ -73,10 +77,13 @@ def text_stat(filename):
     file = open_file(filename)
 
     if file == -1:
-        return {"error": "Only .txt files are supported"}
+        return {"error": "No such file or directory"}
 
     if file == -2:
-        return {"error": "No such file or directory"}
+        return {"error": "Only .txt files are supported"}
+
+    if file == -3:
+        return {"error": "File is empty"}
 
     else:
         words = get_words(file)
@@ -90,6 +97,6 @@ def text_stat(filename):
         return stats
 
 
-filename = "./data/text.txt"
+filename = "./data/missing.txt"
 
 print(text_stat(filename))
