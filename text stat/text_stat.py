@@ -4,11 +4,15 @@ import os
 
 
 def open_file(filename):
+
+    if not filename.endswith('.txt'):
+        return -1
+
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as file:
             return file.read()
     else:
-        return None
+        return -2
 
 
 def count_paragraphs(filename):
@@ -67,7 +71,11 @@ def bilingual_count(words):
 
 def text_stat(filename):
     file = open_file(filename)
-    if not file:
+
+    if file == -1:
+        return {"error": "Only .txt files are supported"}
+
+    if file == -2:
         return {"error": "No such file or directory"}
 
     else:
@@ -82,6 +90,6 @@ def text_stat(filename):
         return stats
 
 
-filename = "./data/empty.txt"
+filename = "./data/text.txt"
 
 print(text_stat(filename))
