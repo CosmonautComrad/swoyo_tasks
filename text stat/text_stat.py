@@ -1,10 +1,14 @@
 from collections import Counter
 import re
+import os
 
 
 def open_file(filename):
-    with open(filename, "r", encoding="utf-8") as file:
-        return file.read()
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            return file.read()
+    else:
+        return None
 
 
 def count_paragraphs(filename):
@@ -63,17 +67,21 @@ def bilingual_count(words):
 
 def text_stat(filename):
     file = open_file(filename)
+    if not file:
+        return {"error": "No such file or directory"}
 
-    words = get_words(file)
-    letters = get_all_letters(words)
+    else:
+        words = get_words(file)
+        letters = get_all_letters(words)
 
-    stats = letter_stat(letters, words)
-    stats["word_amount"] = len(words)
-    stats["paragraph_amount"] = count_paragraphs(filename)
-    stats["bilingual_word_amount"] = bilingual_count(words)
+        stats = letter_stat(letters, words)
+        stats["word_amount"] = len(words)
+        stats["paragraph_amount"] = count_paragraphs(filename)
+        stats["bilingual_word_amount"] = bilingual_count(words)
 
-    return stats
+        return stats
 
 
-filename = "./data/text.txt"
+filename = "./data/empty.txt"
+
 print(text_stat(filename))

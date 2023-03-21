@@ -1,5 +1,4 @@
 import numpy as np
-import time
 
 
 def get_index(numbers, low):
@@ -9,7 +8,16 @@ def get_index(numbers, low):
     return i
 
 
-def prime_numbers_1(low, high):
+def prime_numbers(low, high):
+    if not isinstance(low, int) or not isinstance(high, int):
+        return []
+
+    if low > high:
+        return []
+
+    if low < 0:
+        return []
+
     nums = list(np.arange(0, high + 1))
     nums[1] = 0
     i = 2
@@ -23,33 +31,17 @@ def prime_numbers_1(low, high):
         i += 1
 
     prime_nums = [num for num in nums if num != 0]
+
+    if not prime_nums:
+        return []
+
+    if prime_nums[-1] < low:
+        return []
+
     low_ind = get_index(prime_nums, low)
 
     return prime_nums[low_ind:]
 
 
-def is_divided(numbers, num):
-    return any([num % i == 0 for i in numbers])
+print(prime_numbers(0, 1))
 
-
-def prime_numbers_2(low, high):
-    primes = [2, 3]
-
-    for i in range(4, high + 1):
-        if not is_divided(primes, i):
-            primes.append(i)
-
-    low_ind = get_index(primes, low)
-
-    return primes[low_ind:]
-
-
-first_time = time.time()
-res_1 = prime_numbers_1(0, 100000)
-print("--- %s seconds ---" % (time.time() - first_time))
-
-second_time = time.time()
-res_2 = prime_numbers_2(0, 100000)
-print("--- %s seconds ---" % (time.time() - second_time))
-
-print(f"Are results same? {np.allclose(res_1, res_2)}")
